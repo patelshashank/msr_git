@@ -13,19 +13,19 @@ pipeline {
 	}
 	stage('Create Pricing docker files'){
             steps {
-                sh "${MSR_TARGET_DOCKER}/is_container.sh createPackageDockerfile -Dimage.name=is:msr -Dpackage.list=${packageName} -Dfile.name=PricingMSR"
+                sh "${MSR_TARGET_DOCKER}/is_container.sh createPackageDockerfile -Dimage.name=${baseImageName} -Dpackage.list=${packageName} -Dfile.name=PricingMSR"
 		echo "Pricings package docker file created"
             }
         }
 	stage('Build Pricing Image'){
             steps{
-                sh "${MSR_TARGET_DOCKER}/is_container.sh buildPackage -Dimage.name=is:${PricingTag} -Dfile.name=PricingMSR"
+                sh "${MSR_TARGET_DOCKER}/is_container.sh buildPackage -Dimage.name=${imageName} -Dfile.name=PricingMSR"
 		echo "Pricings MSR image built successfully"
             }
         }
 	stage('Push Pricing image to docker registry'){
             steps {
-                sh '${MSR_TARGET_DOCKER}/is_container.sh pushImage -Duser=${DockerRegistryUser} -Dpassword=${DockerRegistryPassword} -Dserver=${DockerRegistryUrl} -Drepository.name=${DockerRepositoryName} -Dimage.name=is:${PricingTag}'
+                sh '${MSR_TARGET_DOCKER}/is_container.sh pushImage -Duser=${DockerRegistryUser} -Dpassword=${DockerRegistryPassword} -Dserver=${DockerRegistryUrl} -Drepository.name=${DockerRepositoryName} -Dimage.name=${imageName}'
 		echo "Uploaded Pricings MSR image built successfully"
             	}
         	}
